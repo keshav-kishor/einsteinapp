@@ -1,0 +1,88 @@
+# Javascript Node CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
+#
+version: 2
+jobs:
+  build-test:
+    docker:
+      - image: circleci/node:8.11-browsers
+    working_directory: ~/repo
+    steps:
+      - checkout
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            # Find a cache corresponding to this specific package.json checksum. when this file is changed, this key will fail (falls back to branch)
+            - lightning-agent-{{ .Branch }}-{{ checksum "package.json" }}
+            - lightning-agent-{{ .Branch }}
+            - lightning-agent-
+      - run: 
+          name: Install dependency packages
+          command: npm install
+
+      - run:
+          name: Install Chrome current stable version
+          command: |
+            curl -L -o google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+            sudo dpkg -i google-chrome.deb
+            sudo sed -i 's|HERE/chrome"|HERE/chrome" --no-sandbox|g' /opt/google/chrome/google-chrome
+            rm google-chrome.deb
+      - save-cache:
+          paths:
+            - node_modules
+          key: lightning-agent-{{ .Branch }}-{{ checksum "package.json" }}
+          
+      - run:
+          name: Run angular linter
+          command: npm run lint
+      - run:
+          # The double dash (--) is needed to pass arguments into the npm script.
+          name: Build angular projects and transform to Salesforce static resources
+          command: npm run gulp -- ci_build_transform
+      - run:
+          name: Chrome Version 
+          command: google-chrome --version
+      - run: 
+          name: Run auth-app unit tests
+          command: npm run test -- auth-app --no-watch --no-progress --code-coverage --browsers=ChromeHeadlessCI
+      - run: 
+          name: Run agent-lib unit tests
+          command: npm run test -- agent-lib --no-watch --no-progress --code-coverage --browsers=ChromeHeadlessCI
+      - run: 
+          name: Run common-lib unit tests
+          command: npm run test -- common-lib --no-watch --no-progress --code-coverage --browsers=ChromeHeadlessCI          
+      - run: 
+          name: Run agent-app unit tests
+          command: npm run test -- agent-app --no-watch --no-progress --code-coverage --browsers=ChromeHeadlessCI
+      - run: 
+          name: Upload angular codecoverage to Codecov
+          command: ./node_modules/.bin/codecov --token=$CODECOV_TOKEN
+      - run: 
+          name: Execute angular E2E tests
+          command: npm run e2e -- --configuration=ci
+      - run:
+          name: Authenticate to Salesforce DevHub (sfdx jwt:grant)
+          command: npm run sfdx -- force:auth:jwt:grant --jwtkeyfile ./keys/devhub.key --clientid $SF_DEVHUB_CLIENT_ID	--username $SF_DEVHUB_USERNAME --setdefaultdevhubusername --setalias DevHubOrg
+      - run: 
+          name: Create scratch org for CircleCi build
+          command: npm run sfdx -- force:org:create --targetdevhubusername DevHubOrg --setdefaultusername --definitionfile ./config/agent-ci-scratch.json --setalias CI-Scratch-Org  username=CircleCI-$CIRCLE_BUILD_NUM-$CIRCLE_USERNAME@niceincontactdev.com --wait 10
+      - run: 
+          name: Push the source to scratch org to run tests
+          command: npm run sfdx -- force:source:push --targetusername=CI-Scratch-Org
+      - run: 
+          name: Execute Salesforce apex unit-tests
+          command: npm run sfdx -- force:apex:test:run --targetusername=CI-Scratch-Org --codecoverage --resultformat junit --outputdir ./coverage/force --wait 10
+      - run: 
+          name: Upload apex codecoverage to Codecov
+          command: ./node_modules/.bin/codecov --token=$CODECOV_TOKEN
+      - run: 
+          name: Delete the scratch org
+          when: always
+          command: npm run sfdx -- force:org:delete --targetusername=CI-Scratch-Org --noprompt
+
+workflows:
+  version: 2
+  build-test:
+    jobs:
+      - build-test
