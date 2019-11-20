@@ -39,8 +39,7 @@ node {
 				rmsg = sh returnStdout: true, script: "${toolbelt} force:mdapi:deploy -d build/readiness-app/. -u ${HUB_ORG}"
 			}else{
 			   println('Creating package structure for readiness-app')
-			   rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:convert -r readiness-app/force-app --outputdir build/readiness-app
-			   println('SUCCESS:: Package structure for readiness-app Created!!')
+			   rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:convert -r readiness-app/force-app/. --outputdir build/readiness-app
 			   rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:mdapi:deploy -d build/readiness-app/. -u ${HUB_ORG}"
 			}
 			  
