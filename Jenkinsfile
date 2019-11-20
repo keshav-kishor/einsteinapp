@@ -38,13 +38,20 @@ node {
 			if (isUnix()) {
 				rmsg = sh returnStdout: true, script: "${toolbelt} force:mdapi:deploy -d build/readiness-app/. -u ${HUB_ORG}"
 			}else{
-			   println('Creating package structure for readiness-app')
+			   println('-->Creating package structure for readiness-app...')
 			   rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:convert -r readiness-app/force-app --outputdir build/readiness-app"
+			   println('SUCCESS:: Package structure for readiness-app Created!!')
+			   println('-->Creating package structure for einstein-app...')
+			   rmsg = bat returnStdout: true, script: "\"${toolbelt}\"  force:source:convert -r einstein-app --outputdir build/einstein-app"
+			   println('SUCCESS:: Package structure for einstein-app Created!!')
+			   println('Deploying readiness-app to the org')
 			   rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:mdapi:deploy -d build/readiness-app/. -u ${HUB_ORG}"
+			   deploymsg = bat returnStdout: true, script: "\"${toolbelt}\" force:mdapi:deploy:report -u ${HUB_ORG}"
+			   printf rmsg
 			}
 			  
             printf rmsg
-            println('Hello from a Job DSL script!')
+            println('*****NICE inContact CI Job*****')
             println(rmsg)
         }
     }
