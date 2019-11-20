@@ -47,12 +47,13 @@ node {
 			   println('Deploying readiness-app to the org')
 			   rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:mdapi:deploy -d build/readiness-app/. -u ${HUB_ORG}"
 			   deploymsg = bat returnStdout: true, script: "\"${toolbelt}\" force:mdapi:deploy:report -u ${HUB_ORG}"
-			   printf rmsg
+			   
 			}
 			  
             printf rmsg
             println('*****NICE inContact CI Job*****')
             println(rmsg)
+	    println(deploymsg)
         }
     }
 }
