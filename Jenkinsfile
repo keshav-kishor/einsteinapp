@@ -24,7 +24,7 @@ node {
 	
 	
 	def props = readProperties  file:'jenkins.properties'
-	def CONNECTED_APP_CONSUMER_KEY1= props['${environment}']
+	def CONNECTED_APP_CONSUMER_KEY1= props[${environment}]
 	
 	echo "CONNECTED_APP_CONSUMER_KEY=${CONNECTED_APP_CONSUMER_KEY1}"
 
