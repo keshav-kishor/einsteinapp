@@ -17,9 +17,11 @@ node {
     println SFDC_HOST
     println CONNECTED_APP_CONSUMER_KEY
     def toolbelt = tool 'toolbelt'
+    properties([parameters([choice(choices: 'DEV\nQA1\nQA2\nSTAGING\nPROD', description: 'Select Environment for deployment', name: 'ENV')])])
 
     stage('checkout source') {
         // when running in multi-branch job, one must issue this command
+	    echo "selected environment:: ${params.ENV}"
         checkout scm
     }
 
