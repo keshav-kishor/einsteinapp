@@ -19,6 +19,12 @@ node {
     def toolbelt = tool 'toolbelt'
     properties([parameters([choice(choices: 'DEV\nQA1\nQA2\nSTAGING\nPROD', description: 'Select Environment for deployment', name: 'ENV')])])
 
+	def props = readProperties  file:'/jenkins.properties'
+	def Var1= props['Monday']
+	def Var2= props['Tuesday']
+	echo "Var1=${Var1}"
+	echo "Var2=${Var2}"
+	
     stage('checkout source') {
         // when running in multi-branch job, one must issue this command
 	    echo "selected environment:: ${params.ENV}"
