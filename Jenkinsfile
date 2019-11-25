@@ -49,6 +49,12 @@ node {
 			if (isUnix()) {
 				rmsg = sh returnStdout: true, script: "${toolbelt} force:mdapi:deploy -d build/readiness-app/. -u ${HUB_ORG}"
 			}else{
+				if("${environment}" == "DEV"){
+					// skip test execution
+					echo "skiping test execution for DEV"
+				} else {
+					echo "starting apex test Execution..."
+				}
 			   println('-->Creating package structure for readiness-app...')
 			   rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:source:convert -r readiness-app/force-app --outputdir build/readiness-app"
 			   println('SUCCESS:: Package structure for readiness-app Created!!')
@@ -64,13 +70,16 @@ node {
             printf rmsg
             println('*****NICE inContact CI Job*****')
             println(rmsg)
-	    println(deploymsg)
-	     emailext ( 
-		       subject: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
-		       body: """SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':
-			 Check console output at '${env.BUILD_URL}${env.JOB_NAME} [${env.BUILD_NUMBER}]'""",
-		       to: 'keshav.kishor@nice.com'
-		     )
+			println(deploymsg)
+	     
         }
     }
+	stage('Send Email') {
+		emailext ( 
+		   subject: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+		   body: """SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':
+		 Check console output at '${env.BUILD_URL}${env.JOB_NAME} [${env.BUILD_NUMBER}]'""",
+		   to: 'keshav.kishor@nice.com'
+		 )
+	}
 }
