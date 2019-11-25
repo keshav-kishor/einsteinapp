@@ -19,7 +19,7 @@ node {
     def toolbelt = tool 'toolbelt'
 	
     properties([parameters([choice(choices: 'DEV\nQA1\nQA2\nSTAGING\nPROD', description: 'Select Environment for deployment', name: 'ENV')])])
-	def environment = '${params.ENV}'
+	def environment = ${params.ENV}
     echo "selected environment:: ${environment}"
 	
 	
