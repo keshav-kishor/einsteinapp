@@ -54,7 +54,7 @@ node {
 					echo "skiping test execution for DEV"
 				} else {
 					echo "starting apex test Execution..."
-					 rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:apex:test:run"
+					 rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:apex:test:run -u ${HUB_ORG}"
 					 println(rmsg)
 				}
 			   println('-->Creating package structure for readiness-app...')
