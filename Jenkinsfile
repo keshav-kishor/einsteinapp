@@ -55,11 +55,11 @@ node {
 				} else {
 					echo "starting apex test Execution..."
 					testMsg = bat returnStdout: true, script: "\"${toolbelt}\" force:apex:test:run -u ${HUB_ORG}"
-					println("test message:: "testMsg)
+					println("test message:: "+ testMsg)
 					testId = testMsg.substring(testMsg.lastIndexOf('-i') + 3, testMsg.lastIndexOf('-u')-1)
-					println("testId:: "+testId)
+					println("testId:: "+ testId)
 					rmsg = bat returnStdout: true, script: "\"${toolbelt}\" force:apex:test:report -i ${testId} -u ${HUB_ORG}"
-					println("final test result:: "+rmsg)
+					println("final test result:: "+ rmsg)
 					
 				}
 			  /* println('-->Creating package structure for readiness-app...')
