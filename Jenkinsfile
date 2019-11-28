@@ -53,9 +53,9 @@ node {
 
 			echo "Creating Salesforce Scratch org"
 			if (isUnix()) {
-				rmsg = sh returnStdout: true, script: "npm run sfdx force:org:create --definitionfile config/project-scratch-def.json --setdefaultusername --setalias CI-Scratch-Org"
+				rmsg = sh returnStdout: true, script: "npm run sfdx -- force:org:create --definitionfile config/project-scratch-def.json --setdefaultusername --setalias CI-Scratch-Org"
 			}else{
-				rmsg = bat returnStdout: true, script: "npm run sfdx force:org:create --definitionfile config/project-scratch-def.json --setdefaultusername --setalias CI-Scratch-Org"
+				rmsg = bat returnStdout: true, script: "npm run sfdx -- force:org:create --definitionfile config/project-scratch-def.json --setdefaultusername --setalias CI-Scratch-Org"
 			}
 
 			echo "Push source to Salesforce Scratch org"
