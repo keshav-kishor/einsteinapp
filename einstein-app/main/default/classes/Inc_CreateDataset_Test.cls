@@ -30,7 +30,7 @@ public class Inc_CreateDataset_Test {
         Test.setMock(HttpCalloutMock.class, apiResponse);
         Test.startTest();
         InContact_Reports__mdt repdata = [SELECt Id FROM InContact_Reports__mdt LIMIT 1];
-        Id testId =  inc_CreateDataset.createDataset(repdata.id, '', 'First_Call_Resolution');
+       // Id testId =  inc_CreateDataset.createDataset(repdata.id, '', 'First_Call_Resolution');
       Test.stopTest();  
     }
 
