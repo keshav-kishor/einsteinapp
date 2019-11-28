@@ -20,6 +20,8 @@ build/
 
 dist/
 
+coverage
+
 # Angular generated files to be ignored from source repository
 src/force-app/main/default/staticresources/CXoneAuth
 src/force-app/main/default/staticresources/CXoneAuth.resource-meta.xml
