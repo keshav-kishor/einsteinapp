@@ -17,7 +17,7 @@ node {
     println SFDC_HOST
     println CONNECTED_APP_CONSUMER_KEY
     def toolbelt = tool 'toolbelt'
-    tools {nodejs "node"}
+    
 	
     properties([parameters([choice(choices: 'DEV\nQA1\nQA2\nSTAGING\nPROD', description: 'Select Environment for deployment', name: 'ENV')])])
 	def environment = "${params.ENV}"
@@ -36,7 +36,7 @@ node {
     }
 	
    stage('Installing dependency packages') {
-        npm install
+       testMsg = bat returnStdout: true, script: "npm install"
     }
 
     withCredentials([file(credentialsId: JWT_KEY_CRED_ID, variable: 'jwt_key_file')]) {
