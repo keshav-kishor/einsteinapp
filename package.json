@@ -14,7 +14,8 @@
     "build": "ng build",
     "build-all": "ng build common-lib && ng build auth-app",
     "gulp": "gulp",
-    "sfdx": "sfdx"
+    "sfdx": "sfdx",
+    "codecov": "codecov"
   },
   "private": true,
   "dependencies": {
