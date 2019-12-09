@@ -25,10 +25,6 @@ node {
 	echo "CONNECTED_APP_CONSUMER_KEY = ${CONNECTED_APP_CONSUMER_KEY}"
 
     stage('Fetch Key') {
-            steps 
-            { 
-				sh '''
-                        
                         if [ -d ~/.ssh ] && [ -f ~/.ssh/id_rsa.pub ] && [ -f ~/.ssh/id_rsa ] ; then
                             echo "file already exist"
                             x=`cat ~/.ssh/id_rsa`
@@ -43,8 +39,6 @@ node {
                             echo $y
  
                         fi
-                 '''
-            }
     }
 	
     stage('checkout source') {
