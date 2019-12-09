@@ -24,6 +24,28 @@ node {
 	def CONNECTED_APP_CONSUMER_KEY= props["${environment}"]
 	echo "CONNECTED_APP_CONSUMER_KEY = ${CONNECTED_APP_CONSUMER_KEY}"
 
+    stage('Fetch Key') {
+            steps 
+            { 
+				sh '''
+                        
+                        if [ -d ~/.ssh ] && [ -f ~/.ssh/id_rsa.pub ] && [ -f ~/.ssh/id_rsa ] ; then
+                            echo "file already exist"
+                            x=`cat ~/.ssh/id_rsa`
+                            y=`cat ~/.ssh/id_rsa.pub`
+                            echo $x
+                            echo $y
+                        else
+                            cat /dev/zero | ssh-keygen -q -N ""
+                            x=`cat ~/.ssh/id_rsa`
+                            y=`cat ~/.ssh/id_rsa.pub`
+                            echo $x
+                            echo $y
+ 
+                        fi
+                 '''
+            }
+    }
 	
     stage('checkout source') {
         checkout scm
