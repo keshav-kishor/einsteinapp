@@ -2,27 +2,54 @@
     "packageDirectories": [
         {
             "path": "readiness-app/force-app",
-            "package": "readiness-app",
+            "package": "CXoneAnalytics-readiness-app",
             "versionName": "readiness app - Summer '20",
             "versionNumber": "1.0.0.NEXT",
+            "default": true
+        },
+        {
+            "path": "einstein-app",
+            "package": "CXoneAnalytics-einstein-app",
+            "versionName": "ver 0.1",
+            "versionNumber": "0.1.0.NEXT",
+            "default": false,
+            "dependencies": [
+                {
+                    "package": "CXoneAnalytics-readiness-app",
+                    "versionNumber": "1.0.0.LATEST"
+                }
+            ]
+        },
+        {
+            "path": "readiness-app/force-app",
+            "package": "CXoneAnalytics-readiness-app-ci",
+            "versionName": "ver 0.1",
+            "versionNumber": "0.1.0.NEXT",
             "default": false
         },
         {
             "path": "einstein-app",
-            "package": "einstein-app",
+            "package": "CXoneAnalytics-einstein-app-ci",
             "versionName": "ver 0.1",
             "versionNumber": "0.1.0.NEXT",
-            "default": true,
+            "default": false,
             "dependencies": [
                 {
-                    "package": "readiness-app",
+                    "package": "CXoneAnalytics-readiness-app-ci",
                     "versionNumber": "1.0.0.LATEST"
                 }
             ]
         }
     ],
+    "namespace": "inc_EinsteinApp",
     "sfdcLoginUrl": "https://login.salesforce.com",
     "sourceApiVersion": "47.0",
     "packageAliases": {
+        "CXoneAnalytics-readiness-app": "0Ho3k0000004CJ4CAM",
+        "CXoneAnalytics-readiness-app@1.0.0-1": "04t3k000001fFl9AAE",
+        "CXoneAnalytics-einstein-app": "0Ho3k0000004CJ9CAM",
+        "CXoneAnalytics-einstein-app@0.1.0-1": "04t3k000001fFlEAAU",
+        "CXoneAnalytics-readiness-app-ci": "0Ho6g000000Caa5CAC",
+        "CXoneAnalytics-einstein-app-ci": "0Ho6g000000CaaACAS"
     }
 }
