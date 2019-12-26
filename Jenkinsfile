@@ -24,25 +24,7 @@ node {
 	def CONNECTED_APP_CONSUMER_KEY= props["${environment}"]
 	echo "CONNECTED_APP_CONSUMER_KEY = ${CONNECTED_APP_CONSUMER_KEY}"
 
-    stage('Fetch Key') {
-	    	 sh '''
-                        if [ -d ~/.ssh ] && [ -f ~/.ssh/id_rsa.pub ] && [ -f ~/.ssh/id_rsa ] ; then
-                            echo "file already exist"
-                            x=`cat ~/.ssh/id_rsa`
-                            y=`cat ~/.ssh/id_rsa.pub`
-                            echo $x
-                            echo $y
-                        else
-                            cat /dev/zero | ssh-keygen -q -N ""
-                            x=`cat ~/.ssh/id_rsa`
-                            y=`cat ~/.ssh/id_rsa.pub`
-                            echo $x
-                            echo $y
- 
-                        fi
-		  '''	
-    }
-	
+   
     stage('checkout source') {
         checkout scm
     }
@@ -55,7 +37,7 @@ node {
 	   }
     }
 
-	stage('Apex Test Execution') {
+	/*stage('Apex Test Execution') {
 		echo "Authenticating to Salesforce DevHub"
 		if (isUnix()) {
 			rc = sh returnStatus: true, script: "npm run sfdx -- force:auth:jwt:grant --clientid ${CONNECTED_APP_CONSUMER_KEY} --username ${HUB_ORG} --jwtkeyfile keys/devhub.key --setdefaultdevhubusername --instanceurl ${SFDC_HOST}"
@@ -99,7 +81,7 @@ node {
 			rmsg = bat returnStdout: true, script: "npm run sfdx -- force:org:delete --targetusername=CI-Scratch-Org --noprompt"
 		}
 
-	}
+	}*/
 
 
 	stage('Deploy Source Code') {
@@ -116,30 +98,22 @@ node {
 			rmsg = sh returnStdout: true, script: "npm run sfdx -- force:mdapi:deploy -d build/readiness-app/. -u ${HUB_ORG}"
 		}else{
 			println('-->Creating package structure for readiness-app...')
-			rmsg = bat returnStdout: true, script: "npm run sfdx --  force:source:convert -r readiness-app/force-app --outputdir build/readiness-app"
-			println('SUCCESS:: Package structure for readiness-app Created!!')
-			println('-->Creating package structure for einstein-app...')
-			rmsg = bat returnStdout: true, script: "npm run sfdx --   force:source:convert -r einstein-app --outputdir build/einstein-app"
-			println('SUCCESS:: Package structure for einstein-app Created!!')
-			println('Deploying readiness-app to the org')
-			rmsg = bat returnStdout: true, script: "npm run sfdx --  force:mdapi:deploy -d build/readiness-app/. -u ${HUB_ORG}"
-			deploymsg = bat returnStdout: true, script: "npm run sfdx --  force:mdapi:deploy:report -u ${HUB_ORG}"
+			rmsg = bat returnStdout: true, script: "npm run sfdx -- force:package:version:create --package CXoneAnalytics-readiness-app-ci -x -v ${HUB_ORG} --wait 20"
 			
 		}
 			
 		printf rmsg
 		println('*****NICE inContact CI Job*****')
 		println(rmsg)
-		println(deploymsg)
-		
+
 	}
     
-	stage('Send Email') {
+	/*stage('Send Email') {
 		emailext ( 
 		   subject: "SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
 		   body: """SUCCESSFUL: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':
 		 Check console output at '${env.BUILD_URL}${env.JOB_NAME} [${env.BUILD_NUMBER}]'""",
 		   to: 'keshav.kishor@nice.com'
 		 )
-	}
+	}*/
 }
